@@ -1,0 +1,13 @@
+# Tạm thời chỉ công khai bài 01 - Workflow Bitrix24.
+# Khi hoàn thành bài 02 hoặc 03, xóa dòng tương ứng trước khi thêm vào Git.
+/02_Google_Sheets_Bitrix24/
+/03_TikTok_Bitrix24/
+/README_LO_TRINH.md
+/V2 - Bai Kiem tra Xay dung Workflow tren Bitrix24 - Version 1.pdf
+/V2 - Bai Tich hop Tiktok voi Bitrix24 - Version 1.pdf
+/V2 - De bai Tich hop Google Sheet voi Bitrix24 CRM - Version 2.pdf
+
+# Tệp cục bộ của Windows/VS Code
+.DS_Store
+Thumbs.db
+.vscode/
