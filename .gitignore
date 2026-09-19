@@ -11,3 +11,5 @@
 .DS_Store
 Thumbs.db
 .vscode/
+
+/02_Google_Sheets_Bitrix24/secrets/
