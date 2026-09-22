@@ -1,6 +1,5 @@
 # Tạm thời chỉ công khai bài 01 - Workflow Bitrix24.
 # Khi hoàn thành bài 02 hoặc 03, xóa dòng tương ứng trước khi thêm vào Git.
-/02_Google_Sheets_Bitrix24/
 /03_TikTok_Bitrix24/
 /README_LO_TRINH.md
 /V2 - Bai Kiem tra Xay dung Workflow tren Bitrix24 - Version 1.pdf
@@ -12,4 +11,15 @@
 Thumbs.db
 .vscode/
 
+# Cấu hình cục bộ và bí mật
+.env
+.env.*
+!.env.example
+node_modules/
+coverage/
+dist/
+.state/
+*.log
+
 /02_Google_Sheets_Bitrix24/secrets/
+/02_Google_Sheets_Bitrix24/V2 - De bai Tich hop Google Sheet voi Bitrix24 CRM - Version 2.pdf

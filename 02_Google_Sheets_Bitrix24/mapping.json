@@ -1,0 +1,41 @@
+{
+  "sheetName": "Leads",
+  "headers": {
+    "name": "Tên",
+    "email": "Email",
+    "phone": "Điện thoại",
+    "company": "Công ty",
+    "utmSource": "UTM Source",
+    "budget": "Ngân sách dự kiến",
+    "leadStatus": "Trạng thái Lead",
+    "assignee": "Người phụ trách",
+    "notes": "Ghi chú",
+    "syncStatus": "Trạng thái đồng bộ",
+    "leadId": "Bitrix24 Lead ID",
+    "lastSyncedAt": "Lần đồng bộ cuối",
+    "syncError": "Lỗi đồng bộ",
+    "syncHash": "Sync Hash"
+  },
+  "bitrix": {
+    "titleTemplate": "Lead từ Google Sheets: {{name}}",
+    "defaultStatusId": "NEW",
+    "fieldMap": {
+      "name": "NAME",
+      "company": "COMPANY_TITLE",
+      "utmSource": "UTM_SOURCE",
+      "budget": "OPPORTUNITY",
+      "leadStatus": "STATUS_ID",
+      "notes": "COMMENTS"
+    },
+    "phone": {
+      "field": "PHONE",
+      "valueType": "WORK"
+    },
+    "email": {
+      "field": "EMAIL",
+      "valueType": "WORK"
+    },
+    "customFieldMap": {},
+    "assigneeIdMap": {}
+  }
+}

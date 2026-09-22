@@ -1,0 +1,17 @@
+services:
+  sync:
+    build: .
+    init: true
+    env_file: .env
+    environment:
+      STATE_DIR: /state
+      GOOGLE_APPLICATION_CREDENTIALS: /app/secrets/service-account.json
+      GOOGLE_OAUTH_CLIENT_FILE: /app/secrets/oauth-client.json
+      GOOGLE_OAUTH_TOKEN_FILE: /app/secrets/oauth-token.json
+    volumes:
+      - ./secrets:/app/secrets:ro
+      - ./mapping.json:/app/mapping.json:ro
+      - sync-state:/state
+    command: ["npm", "run", "sync:dry"]
+volumes:
+  sync-state:

@@ -1,0 +1,4 @@
+Tên,Email,Điện thoại,Công ty,UTM Source,Ngân sách dự kiến,Trạng thái Lead,Người phụ trách,Ghi chú,Trạng thái đồng bộ,Bitrix24 Lead ID,Lần đồng bộ cuối,Lỗi đồng bộ,Sync Hash
+Khách Demo A,demo-a@example.com,0901234567,Công ty Demo A,Facebook,5000000,NEW,,Quan tâm gói cơ bản,Chờ xử lý,,,,
+Khách Demo B,demo-b@example.com,0912345678,Công ty Demo B,Google,12000000,NEW,,Cần gọi lại,Chờ xử lý,,,,
+Khách Demo C,demo-c@example.com,0987654321,Công ty Demo C,TikTok,8000000,NEW,,Đăng ký từ landing page,Chờ xử lý,,,,
