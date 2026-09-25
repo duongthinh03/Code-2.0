@@ -1,0 +1,2 @@
+{"event_id":"historical-demo-1","event_type":"lead.generate","data":{"lead_id":"historical-lead-1","full_name":"Khách hàng lịch sử A","email":"historical-a@example.com","phone":"+84901234561","campaign_id":"archive-2024"}}
+{"event_id":"historical-demo-2","event_type":"lead.generate","data":{"lead_id":"historical-lead-2","full_name":"Khách hàng lịch sử B","email":"historical-b@example.com","phone":"+84901234562","campaign_id":"archive-2024"}}

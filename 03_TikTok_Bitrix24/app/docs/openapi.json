@@ -1,0 +1,105 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "TikTok to Bitrix24 mock demo",
+    "version": "0.1.0",
+    "description": "Local mock contract. X-Mock-TikTok-* is not the official TikTok webhook authentication scheme."
+  },
+  "servers": [{ "url": "http://localhost:3000" }],
+  "components": {
+    "securitySchemes": {
+      "AdminKey": { "type": "apiKey", "in": "header", "name": "x-admin-key" },
+      "AdminSession": { "type": "http", "scheme": "bearer" }
+    }
+  },
+  "paths": {
+    "/health": {
+      "get": { "summary": "PostgreSQL and Redis health", "responses": { "200": { "description": "Healthy" }, "503": { "description": "Dependency unhealthy" } } }
+    },
+    "/webhooks/tiktok/leads": {
+      "post": {
+        "summary": "Receive a signed mock TikTok event",
+        "description": "Body uses event_id, event_type and data, or the PDF sample's event and lead_data. Signature: HMAC-SHA256 of timestamp + '.' + raw JSON bytes.",
+        "parameters": [
+          { "name": "X-Mock-TikTok-Timestamp", "in": "header", "required": true, "schema": { "type": "string" } },
+          { "name": "X-Mock-TikTok-Signature", "in": "header", "required": true, "schema": { "type": "string" } }
+        ],
+        "requestBody": { "required": true, "content": { "application/json": { "schema": { "type": "object" } } } },
+        "responses": { "202": { "description": "Persisted and queued" }, "400": { "description": "Invalid payload" }, "401": { "description": "Invalid signature" }, "409": { "description": "Event ID conflict" }, "503": { "description": "Queue unavailable" } }
+      }
+    },
+    "/webhooks/bitrix24/deals": {
+      "post": { "summary": "Mock Deal status callback", "security": [{ "AdminKey": [] }], "requestBody": { "required": true, "content": { "application/json": { "schema": { "type": "object", "required": ["deal_id", "status"], "properties": { "deal_id": { "type": "string" }, "status": { "type": "string", "enum": ["open", "won", "lost"] }, "amount": { "type": "number" } } } } } }, "responses": { "201": { "description": "Deal updated" } } }
+    },
+    "/api/v1/leads": {
+      "get": { "summary": "Paginated active mock Leads", "security": [{ "AdminKey": [] }, { "AdminSession": [] }], "parameters": [{ "name": "page", "in": "query", "schema": { "type": "integer", "default": 1 } }, { "name": "limit", "in": "query", "schema": { "type": "integer", "default": 10 } }, { "name": "source", "in": "query", "schema": { "type": "string", "enum": ["tiktok"] } }], "responses": { "200": { "description": "Lead list" } } },
+      "post": { "summary": "Create or idempotently update a mock Lead", "security": [{ "AdminKey": [] }, { "AdminSession": [] }], "requestBody": { "required": true, "content": { "application/json": { "schema": { "type": "object", "required": ["externalLeadId"], "properties": { "externalLeadId": { "type": "string" }, "email": { "type": "string" }, "phone": { "type": "string" }, "fullName": { "type": "string" } } } } } }, "responses": { "201": { "description": "Lead ID" } } }
+    },
+    "/api/v1/leads/{id}": {
+      "get": { "summary": "Get active mock Lead", "security": [{ "AdminKey": [] }, { "AdminSession": [] }], "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }], "responses": { "200": { "description": "Lead" }, "404": { "description": "Not found or archived" } } },
+      "patch": { "summary": "Update fullName, city or customFields", "security": [{ "AdminKey": [] }, { "AdminSession": [] }], "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }], "requestBody": { "required": true, "content": { "application/json": { "schema": { "type": "object" } } } }, "responses": { "200": { "description": "Lead updated" } } },
+      "delete": { "summary": "Soft archive mock Lead and its Deal, preserve audit", "security": [{ "AdminKey": [] }, { "AdminSession": [] }], "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }], "responses": { "200": { "description": "Archived" } } }
+    },
+    "/api/v1/deals": {
+      "get": { "summary": "List mock Deals", "security": [{ "AdminKey": [] }], "parameters": [{ "name": "status", "in": "query", "schema": { "type": "string", "enum": ["open", "won", "lost"] } }, { "name": "assigned_to", "in": "query", "schema": { "type": "string" } }], "responses": { "200": { "description": "Deal list" } } }
+    },
+    "/api/v1/deals/{id}": {
+      "get": { "summary": "Get active mock Deal", "security": [{ "AdminKey": [] }, { "AdminSession": [] }], "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }], "responses": { "200": { "description": "Deal" } } },
+      "patch": { "summary": "Update mock Deal title, pipeline, stage, probability or sales assignment", "security": [{ "AdminKey": [] }, { "AdminSession": [] }], "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }], "requestBody": { "required": true, "content": { "application/json": { "schema": { "type": "object" } } } }, "responses": { "200": { "description": "Deal updated" } } },
+      "delete": { "summary": "Soft archive mock Deal, preserve audit", "security": [{ "AdminKey": [] }, { "AdminSession": [] }], "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }], "responses": { "200": { "description": "Archived" } } }
+    },
+    "/api/v1/leads/{id}/convert-to-deal": {
+      "post": { "summary": "Idempotently create a mock Deal", "security": [{ "AdminKey": [] }], "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }], "responses": { "201": { "description": "Deal created or reused" } } }
+    },
+    "/api/v1/config/mappings": {
+      "get": { "summary": "Get Lead field paths", "security": [{ "AdminKey": [] }], "responses": { "200": { "description": "Mappings" } } },
+      "put": { "summary": "Update Lead field paths, including optional customFields UF_CRM_* map", "security": [{ "AdminKey": [] }, { "AdminSession": [] }], "requestBody": { "required": true, "content": { "application/json": { "schema": { "type": "object" } } } }, "responses": { "200": { "description": "Mappings saved" } } }
+    },
+    "/api/v1/config/rules": {
+      "get": { "summary": "Get automatic Deal rule", "security": [{ "AdminKey": [] }], "responses": { "200": { "description": "Rule" } } },
+      "put": { "summary": "Update Deal rule, assignmentCriteria and engagement probability bonuses", "security": [{ "AdminKey": [] }, { "AdminSession": [] }], "requestBody": { "required": true, "content": { "application/json": { "schema": { "type": "object", "properties": { "campaignContains": { "type": "string" }, "pipelineId": { "type": "string" }, "stageId": { "type": "string" }, "probability": { "type": "integer", "minimum": 0, "maximum": 100 }, "assignedTo": { "type": "string", "nullable": true }, "assignmentCriteria": { "type": "array", "items": { "type": "object", "properties": { "campaignContains": { "type": "string" }, "cityEquals": { "type": "string" }, "salesPersonId": { "type": "string" } } } }, "formCompletionBonus": { "type": "integer" }, "interactionBonus": { "type": "integer" } } } } } }, "responses": { "200": { "description": "Rule saved" } } }
+    },
+    "/api/v1/analytics/conversion-rates": {
+      "get": { "summary": "Lead-to-Deal and Deal-won ratios", "security": [{ "AdminKey": [] }], "responses": { "200": { "description": "Mock ratios" } } }
+    },
+    "/api/v1/analytics/campaign-performance": {
+      "get": { "summary": "Campaign Lead, Deal, cost, revenue, CPL and ROI", "security": [{ "AdminKey": [] }], "responses": { "200": { "description": "Mock campaign report" } } }
+    },
+    "/api/v1/reports/export": {
+      "get": { "summary": "Export mock Leads as CSV, XLSX or JSON", "security": [{ "AdminKey": [] }, { "AdminSession": [] }], "parameters": [{ "name": "format", "in": "query", "required": true, "schema": { "type": "string", "enum": ["csv", "xlsx", "json"] } }, { "name": "date_range", "in": "query", "schema": { "type": "string", "example": "30d" } }], "responses": { "200": { "description": "Export" } } }
+    },
+    "/api/v1/jobs/failed": {
+      "get": { "summary": "Recent failed jobs", "security": [{ "AdminKey": [] }], "responses": { "200": { "description": "Dead-letter list" } } }
+    },
+    "/api/v1/outbound-events": {
+      "get": { "summary": "Mock notifications and TikTok conversion events with delivery state; nothing is sent externally", "security": [{ "AdminKey": [] }, { "AdminSession": [] }], "responses": { "200": { "description": "Mock outbound event list" } } }
+    },
+    "/api/v1/auth/session": {
+      "post": { "summary": "Exchange x-admin-key for an eight-hour Redis session", "security": [{ "AdminKey": [] }], "responses": { "201": { "description": "Bearer token" }, "401": { "description": "Invalid admin key" } } }
+    },
+    "/api/v1/auth/logout": {
+      "post": { "summary": "Revoke Redis bearer session", "security": [{ "AdminSession": [] }], "responses": { "201": { "description": "Session revoked" } } }
+    },
+    "/api/v1/outbound-receipts": {
+      "get": { "summary": "Mock destination delivery receipts", "security": [{ "AdminKey": [] }, { "AdminSession": [] }], "responses": { "200": { "description": "Receipt list" } } }
+    },
+    "/api/v1/outbound-events/deliver-pending": {
+      "post": { "summary": "Drain up to 100 due mock outbound events", "security": [{ "AdminKey": [] }, { "AdminSession": [] }], "responses": { "201": { "description": "Drain result" } } }
+    },
+    "/api/v1/outbound-events/{id}/replay": {
+      "post": { "summary": "Replay a failed mock outbound event", "security": [{ "AdminKey": [] }, { "AdminSession": [] }], "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }], "responses": { "201": { "description": "Requeued" } } }
+    },
+    "/api/v1/automation/reports": {
+      "get": { "summary": "Hourly mock report snapshots", "security": [{ "AdminKey": [] }, { "AdminSession": [] }], "responses": { "200": { "description": "Reports" } } }
+    },
+    "/api/v1/automation/alerts": {
+      "get": { "summary": "Low-conversion mock alerts", "security": [{ "AdminKey": [] }, { "AdminSession": [] }], "responses": { "200": { "description": "Alerts" } } }
+    },
+    "/api/v1/automation/run-report": {
+      "post": { "summary": "Idempotently create current UTC-hour mock report", "security": [{ "AdminKey": [] }, { "AdminSession": [] }], "responses": { "201": { "description": "Report created or reused" } } }
+    },
+    "/api/v1/jobs/{eventId}/replay": {
+      "post": { "summary": "Requeue a failed event", "security": [{ "AdminKey": [] }], "parameters": [{ "name": "eventId", "in": "path", "required": true, "schema": { "type": "string" } }], "responses": { "201": { "description": "Requeued" } } }
+    }
+  }
+}
