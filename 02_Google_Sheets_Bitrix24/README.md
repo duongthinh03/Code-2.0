@@ -1,5 +1,7 @@
 # Google Sheets → Bitrix24 Leads
 
+[Đề bài gốc (PDF)](<V2 - De bai Tich hop Google Sheet voi Bitrix24 CRM - Version 2.pdf>)
+
 MVP TypeScript đồng bộ một chiều. Chạy thủ công hoặc định kỳ; ghi ID, trạng thái, thời gian, lỗi và hash về Sheet. Không phải đồng bộ hai chiều. Không tự xóa Lead hoặc tạo Deal.
 
 ## Bắt đầu

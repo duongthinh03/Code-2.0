@@ -1,5 +1,7 @@
 # TikTok Lead Generation → Bitrix24 (demo mock)
 
+[Đề bài gốc (PDF)](<V2 - Bai Tich hop Tiktok voi Bitrix24 - Version 1.pdf>)
+
 Giai đoạn hiện tại dùng **webhook TikTok mock**. Bitrix24 mặc định cũng là mock, nhưng có thể bật đồng bộ sang Bitrix24 thật bằng `BITRIX_SYNC_ENABLED=true` trong `.env` (xem `app/README.md`). Header `X-Mock-TikTok-*`, cấu trúc payload và thuật toán ký bên dưới là hợp đồng nội bộ để thử nghiệm, **không phải đặc tả webhook chính thức của TikTok**.
 
 ## Chạy cục bộ
